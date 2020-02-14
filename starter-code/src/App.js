@@ -1,18 +1,49 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import 'bulma/css/bulma.css';
+import foods from './foods.json'
+import FoodBox from './FoodBox'
 
 class App extends Component {
+
+  state = {
+    foods: foods,
+    menuArray: [...foods],
+  }
+
+  addFood = (meal) => {
+    let foodCopy = [...this.state.menuArray]
+    foodCopy.unshift(meal)
+    this.setState({
+      menuArray:foodCopy
+    })
+  }
+
+  searchFood = (e) => {
+    console.log(e.target.value, )
+    let searchVal = e.target.value
+    let searchArr = [...this.state.menuArray]
+    let filteredfoods = searchArr.filter(eachFood=>{
+      return eachFood.name.toLowerCase().includes(searchVal.toLowerCase())
+    })
+    this.setState({
+      menuArray:filteredfoods
+    })
+  }
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <h1 className="title">Iron Nutrition</h1>
+        <form onChange={this.handleSearch}>
+              <input name="name" onChange={this.searchFood} type="text" placeholder="Search"/>
+        </form>
+        <FoodBox
+          addMeal={this.addFood}
+          foodItems={this.state.menuArray}
+        />
+
       </div>
     );
   }
